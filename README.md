@@ -29,9 +29,9 @@ Desarrollo de un sistema en Java para gestionar vuelos de una aerolínea. El pro
 ---
 
 ### 🔍 Objetivos Específicos
-- Implementar clases y métodos según la interfaz provista `<code>IAerolinea</code>` para gestionar operaciones como registro de vuelos, venta de pasajes, y cálculo de recaudación.
+- Implementar clases y métodos según la interfaz provista `IAerolinea` para gestionar operaciones como registro de vuelos, venta de pasajes, y cálculo de recaudación.
 - Optimizar métodos clave para cumplir con requisitos de complejidad, como en la cancelación de pasajes en **O(1)**.
-- Desarrollar una serie de pruebas unitarias para validar el comportamiento del sistema según las especificaciones de `<code>IAerolinea</code>`.
+- Desarrollar una serie de pruebas unitarias para validar el comportamiento del sistema según las especificaciones de `IAerolinea`.
 
 ---
 
