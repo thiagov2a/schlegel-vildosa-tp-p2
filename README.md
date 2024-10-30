@@ -18,8 +18,7 @@
 ---
 
 ### 🧑‍🤝‍🧑 Integrantes del Grupo
-- **Oliveira, Franco Nicolas:** nico_oliveira1@hotmail.com
-- **Rodrigues Cardoso, Santiago Gabriel:** santyrodrigues01@gmail.com
+- **Schlegel, Agustín Ezequiel:** []
 - **Vildosa, Thiago Joel:** tvildosa@gmail.com
 
 ---
