@@ -64,7 +64,7 @@ public class AerolineaTest {
 		double[] precios = { 5000.0, 10000.0 };
 		int[] cantAsientos = { 150, 20 };
 		aerolinea.registrarVueloPublicoNacional("Aeroparque", "Jujuy", "15/12/2024", 6, 2000, precios, cantAsientos);
-	}
+}
 
 	@Test
 	public void ej04_registrarVueloPublicoNacional_vueloRegistrado() {

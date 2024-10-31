@@ -13,5 +13,4 @@ public class Aeropuerto {
 		this.provincia = provincia;
 		this.direccion = direccion;
 	}
-
 }
