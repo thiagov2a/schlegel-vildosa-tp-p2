@@ -11,7 +11,6 @@ public class Aerolinea implements IAerolinea {
 	private Map<String, Vuelo> vuelos;
 	private Map<Integer, Cliente> clientes;
 	private Map<String, Aeropuerto> aeropuertos;
-//	private String coñete;
 
 	public Aerolinea(String nombre, String cuit) {
 		this.nombre = nombre;
