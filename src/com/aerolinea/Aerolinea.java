@@ -1,6 +1,5 @@
 package com.aerolinea;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +8,7 @@ public class Aerolinea implements IAerolinea {
 
 	private String nombre;
 	private String cuit;
-	private List<Vuelo> vuelos;
+	private Map<String, Vuelo> vuelos;
 	private Map<Integer, Cliente> clientes;
 	private Map<String, Aeropuerto> aeropuertos;
 //	private String coñete;
@@ -17,7 +16,7 @@ public class Aerolinea implements IAerolinea {
 	public Aerolinea(String nombre, String cuit) {
 		this.nombre = nombre;
 		this.cuit = cuit;
-		this.vuelos = new ArrayList<>();
+		this.vuelos = new HashMap<>();
 		this.clientes = new HashMap<>();
 		this.aeropuertos = new HashMap<>();
 	}
