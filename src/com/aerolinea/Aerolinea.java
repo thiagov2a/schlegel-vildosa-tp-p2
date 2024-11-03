@@ -66,7 +66,7 @@ public class Aerolinea implements IAerolinea {
 		en el caso de que no saltaria una excepcion
 		*/
 		
-		VueloInternacional vueloI = new VueloInternacional(origen, destino, fecha, tripulantes, cantAsientos, valorRefrigerio, precios, cantRefrigerios);
+		VueloInternacional vueloI = new VueloInternacional(origen, destino, fecha, tripulantes, cantAsientos, valorRefrigerio, precios, cantRefrigerios, escalas);
 		
 		cantVuelos++;
 		
@@ -84,7 +84,9 @@ public class Aerolinea implements IAerolinea {
 		en el caso de que no saltaria una excepcion
 		*/
 		
-		VueloPrivado vueloP = new VueloPrivado(origen, destino, fecha, tripulantes, acompaniantes, precio, dniComprador, acompaniantes);
+		int[] cantAsientos = new int[15];
+		
+		VueloPrivado vueloP = new VueloPrivado(origen, destino, fecha, tripulantes, cantAsientos, precio, dniComprador, acompaniantes);
 		
 		cantVuelos++;
 		
