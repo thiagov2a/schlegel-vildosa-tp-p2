@@ -50,6 +50,12 @@ public class Aerolinea implements IAerolinea {
 		en el caso de que no saltaria una excepcion
 		*/
 		
+		if (!aeropuertos.containsKey(destino)) {
+			throw new RuntimeException("El destino ingresado no esta registrado.");
+		} else if (!aeropuertos.get(destino).compararPais("Argentina")) {
+			throw new RuntimeException("El destino ingresado pertenece a Argentina.");
+		}
+		
 		VueloNacional vueloN = new VueloNacional(origen, destino, fecha, tripulantes, cantAsientos, precios, valorRefrigerio);
 		
 		cantVuelos++;
@@ -65,6 +71,9 @@ public class Aerolinea implements IAerolinea {
 		Aca iria un if donde compararia la fecha ingresada por parametro y verifica si es mayor a la actual
 		en el caso de que no saltaria una excepcion
 		*/
+		if (!aeropuertos.containsKey(destino)) {
+			throw new RuntimeException("El destino ingresado no esta registrado.");
+		}
 		
 		VueloInternacional vueloI = new VueloInternacional(origen, destino, fecha, tripulantes, cantAsientos, valorRefrigerio, precios, cantRefrigerios, escalas);
 		
@@ -83,6 +92,9 @@ public class Aerolinea implements IAerolinea {
 		Aca iria un if donde compararia la fecha ingresada por parametro y verifica si es mayor a la actual
 		en el caso de que no saltaria una excepcion
 		*/
+		if (!aeropuertos.containsKey(destino)) {
+			throw new RuntimeException("El destino ingresado no esta registrado.");
+		}
 		
 		int[] cantAsientos = new int[15];
 		

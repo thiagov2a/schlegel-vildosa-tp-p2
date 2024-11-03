@@ -13,4 +13,8 @@ public class Aeropuerto {
 		this.provincia = provincia;
 		this.direccion = direccion;
 	}
+	
+	public boolean compararPais(String paisAComparar){
+		return pais.equals(paisAComparar);
+	}
 }
