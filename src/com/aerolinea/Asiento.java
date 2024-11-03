@@ -3,12 +3,14 @@ package com.aerolinea;
 public class Asiento {
 	
 	private int numero;
-	private String seccion;
-	private Boolean estado;
+	private Boolean libre;
 	
-	public Asiento(int numero, String seccion, Boolean estado) {
+	public Asiento(int numero, Boolean estado) {
 		this.numero = numero;
-		this.seccion = seccion;
-		this.estado = estado;
+		this.libre = estado;
+	}
+	
+	public boolean ocupado() {
+		return libre;
 	}
 }

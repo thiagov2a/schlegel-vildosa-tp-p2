@@ -1,5 +1,6 @@
 package com.aerolinea;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,8 @@ public class Aerolinea implements IAerolinea {
 		this.aeropuertos = new HashMap<>();
 	}
 
+	
+	
 	@Override
 	public void registrarCliente(int dni, String nombre, String telefono) {
 		if (clientes.containsKey(dni)) {
@@ -45,10 +48,9 @@ public class Aerolinea implements IAerolinea {
 	public String registrarVueloPublicoNacional(String origen, String destino, String fecha, int tripulantes,
 			double valorRefrigerio, double[] precios, int[] cantAsientos) {
 
-		/*
-		Aca iria un if donde compararia la fecha ingresada por parametro y verifica si es mayor a la actual
-		en el caso de que no saltaria una excepcion
-		*/
+		if (fechaPosterior(fecha)) {
+			throw new RuntimeException("Fecha ingresada no es valida.");
+		}
 		
 		if (!aeropuertos.containsKey(destino)) {
 			throw new RuntimeException("El destino ingresado no esta registrado.");
@@ -67,10 +69,11 @@ public class Aerolinea implements IAerolinea {
 	@Override
 	public String registrarVueloPublicoInternacional(String origen, String destino, String fecha, int tripulantes,
 			double valorRefrigerio, int cantRefrigerios, double[] precios, int[] cantAsientos, String[] escalas) {
-		/*
-		Aca iria un if donde compararia la fecha ingresada por parametro y verifica si es mayor a la actual
-		en el caso de que no saltaria una excepcion
-		*/
+		
+		if (fechaPosterior(fecha)) {
+			throw new RuntimeException("Fecha ingresada no es valida.");
+		}
+		
 		if (!aeropuertos.containsKey(destino)) {
 			throw new RuntimeException("El destino ingresado no esta registrado.");
 		}
@@ -88,17 +91,15 @@ public class Aerolinea implements IAerolinea {
 	public String VenderVueloPrivado(String origen, String destino, String fecha, int tripulantes, double precio,
 			int dniComprador, int[] acompaniantes) {
 		
-		/*
-		Aca iria un if donde compararia la fecha ingresada por parametro y verifica si es mayor a la actual
-		en el caso de que no saltaria una excepcion
-		*/
+		if (fechaPosterior(fecha)) {
+			throw new RuntimeException("Fecha ingresada no es valida.");
+		}
+		
 		if (!aeropuertos.containsKey(destino)) {
 			throw new RuntimeException("El destino ingresado no esta registrado.");
 		}
 		
-		int[] cantAsientos = new int[15];
-		
-		VueloPrivado vueloP = new VueloPrivado(origen, destino, fecha, tripulantes, cantAsientos, precio, dniComprador, acompaniantes);
+		VueloPrivado vueloP = new VueloPrivado(origen, destino, fecha, tripulantes, precio, dniComprador, acompaniantes);
 		
 		cantVuelos++;
 		
@@ -109,7 +110,7 @@ public class Aerolinea implements IAerolinea {
 
 	@Override
 	public Map<Integer, String> asientosDisponibles(String codVuelo) {
-		
+	//
 		return null;
 	}
 
@@ -152,4 +153,24 @@ public class Aerolinea implements IAerolinea {
 		
 		return null;
 	}	
+	
+	public boolean fechaPosterior(String fecha) {
+		//este codigo puede ir en otra parte del programa, momentarneamente esta aca
+	    // Extraer el día, mes y año usando substring
+	    int dia = Integer.parseInt(fecha.substring(0, 2));    // Separa los dias
+	    int mes = Integer.parseInt(fecha.substring(3, 5));    // Separa el mes
+	    int anio = Integer.parseInt(fecha.substring(6, 10));  // Separa el año
+
+	    // Obtener la fecha actual
+	    Calendar fechaActual = Calendar.getInstance();
+	    int anioActual = fechaActual.get(Calendar.YEAR);
+	    int mesActual = fechaActual.get(Calendar.MONTH) + 1; 
+	    int diaActual = fechaActual.get(Calendar.DAY_OF_MONTH);
+
+	    // Comparar año, luego mes, luego día
+	    return (anio < anioActual) || (anio == anioActual && mes < mesActual) || 
+	            (anio == anioActual && mes == mesActual && dia < diaActual);
+	    
+	}
+	
 }

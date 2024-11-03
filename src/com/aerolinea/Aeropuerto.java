@@ -1,5 +1,7 @@
 package com.aerolinea;
 
+import java.util.Calendar;
+
 public class Aeropuerto {
 	
 	private String nombre;
@@ -17,4 +19,7 @@ public class Aeropuerto {
 	public boolean compararPais(String paisAComparar){
 		return pais.equals(paisAComparar);
 	}
+
+
+	
 }
