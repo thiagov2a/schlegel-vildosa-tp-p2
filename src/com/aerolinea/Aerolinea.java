@@ -11,7 +11,8 @@ public class Aerolinea implements IAerolinea {
 	private Map<String, Vuelo> vuelos;
 	private Map<Integer, Cliente> clientes;
 	private Map<String, Aeropuerto> aeropuertos;
-
+	private int cantVuelos; //contador para crear los codigos de cada vuelo
+	
 	public Aerolinea(String nombre, String cuit) {
 		this.nombre = nombre;
 		this.cuit = cuit;
@@ -43,23 +44,53 @@ public class Aerolinea implements IAerolinea {
 	@Override
 	public String registrarVueloPublicoNacional(String origen, String destino, String fecha, int tripulantes,
 			double valorRefrigerio, double[] precios, int[] cantAsientos) {
+
+		/*
+		Aca iria un if donde compararia la fecha ingresada por parametro y verifica si es mayor a la actual
+		en el caso de que no saltaria una excepcion
+		*/
 		
+		VueloNacional vueloN = new VueloNacional(origen, destino, fecha, tripulantes, cantAsientos, precios, valorRefrigerio);
 		
-		return null;
+		cantVuelos++;
+		
+		vuelos.put(cantVuelos+"-PUB", vueloN);
+		return cantVuelos+"-PUB";
 	}
 
 	@Override
 	public String registrarVueloPublicoInternacional(String origen, String destino, String fecha, int tripulantes,
 			double valorRefrigerio, int cantRefrigerios, double[] precios, int[] cantAsientos, String[] escalas) {
+		/*
+		Aca iria un if donde compararia la fecha ingresada por parametro y verifica si es mayor a la actual
+		en el caso de que no saltaria una excepcion
+		*/
 		
-		return null;
+		VueloInternacional vueloI = new VueloInternacional(origen, destino, fecha, tripulantes, cantAsientos, valorRefrigerio, precios, cantRefrigerios);
+		
+		cantVuelos++;
+		
+		vuelos.put(cantVuelos+"-PUB", vueloI);
+		
+		return cantVuelos+"-PUB";
 	}
 
 	@Override
 	public String VenderVueloPrivado(String origen, String destino, String fecha, int tripulantes, double precio,
 			int dniComprador, int[] acompaniantes) {
 		
-		return null;
+		/*
+		Aca iria un if donde compararia la fecha ingresada por parametro y verifica si es mayor a la actual
+		en el caso de que no saltaria una excepcion
+		*/
+		
+		VueloPrivado vueloP = new VueloPrivado(origen, destino, fecha, tripulantes, acompaniantes, precio, dniComprador, acompaniantes);
+		
+		cantVuelos++;
+		
+		vuelos.put(cantVuelos+"-PRI", vueloP);
+		
+		return cantVuelos+"-PRI";
 	}
 
 	@Override
