@@ -1,7 +1,5 @@
 package com.aerolinea;
 
-import java.util.Calendar;
-
 public abstract class Vuelo {
 	
 	private String origen;

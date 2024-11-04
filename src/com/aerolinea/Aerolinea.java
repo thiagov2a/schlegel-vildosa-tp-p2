@@ -110,14 +110,42 @@ public class Aerolinea implements IAerolinea {
 
 	@Override
 	public Map<Integer, String> asientosDisponibles(String codVuelo) {
-	//
+		
 		return null;
 	}
 
 	@Override
 	public int venderPasaje(int dni, String codVuelo, int nroAsiento, boolean aOcupar) {
+		 
+		 if (!clientes.containsKey(dni)) {
+			 throw new RuntimeException("El cliente no se encuentra registrado.");
+		}
 		
-		return 0;
+		 int codigoPasaje=0;
+		 
+		 /*
+		  * 
+		  * 
+		  * FALTA EL METODO DE LOS VUELOS PRIVADOS
+		  * 
+		  * 
+		  * */
+		 
+		 /* Va comparando cada tipo de vuelo para realizar el metodo necesario */
+		 if (vuelos.get(codVuelo) instanceof VueloNacional) { 
+			VueloNacional vueloN = (VueloNacional) vuelos.get(codVuelo);
+			codigoPasaje=vueloN.comprarPasaje(nroAsiento, aOcupar);
+		}
+		 if (vuelos.get(codVuelo) instanceof VueloInternacional) {
+			VueloInternacional vueloI = (VueloInternacional) vuelos.get(codVuelo);
+			codigoPasaje=vueloI.comprarPasaje(nroAsiento, aOcupar);			
+		}
+		 /* En el caso que el codigo sea 0 o menor significa que algun dato fue erroneo */
+		 if (codigoPasaje<=0) {
+			 throw new RuntimeException("Ocurrio un error y no se pudo realizar la compra.");
+		}
+		 
+		return codigoPasaje;
 	}
 
 	@Override

@@ -12,4 +12,10 @@ public class Pasajero extends Cliente {
 		this.pasajes = new ArrayList<>();
 	}
 
+	@Override
+	public int dniCliente() {
+		// TODO Apéndice de método generado automáticamente
+		return super.dniCliente();
+	}
+
 }

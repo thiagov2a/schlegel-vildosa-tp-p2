@@ -11,4 +11,8 @@ public class Cliente {
 		this.nombre = nombre;
 		this.telefono = telefono;
 	}
+	
+	public int dniCliente() {
+		return dni;
+	}
 }
