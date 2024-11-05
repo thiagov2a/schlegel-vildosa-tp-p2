@@ -13,7 +13,7 @@ public class Aerolinea implements IAerolinea {
 	private Map<String, Vuelo> vuelos;
 	private Map<Integer, Cliente> clientes;
 	private Map<String, Aeropuerto> aeropuertos;
-	private int cantVuelos; // contador para crear los codigos de cada vuelo
+	private int cantVuelos; // Contador para crear los códigos de cada vuelo
 
 	public Aerolinea(String nombre, String cuit) {
 		this.nombre = nombre;
@@ -163,7 +163,7 @@ public class Aerolinea implements IAerolinea {
 		 * 
 		 * 
 		 * FALTA EL METODO DE LOS VUELOS PRIVADOS
-		 * TODO:coñete
+		 * 
 		 * 
 		 */
 
@@ -176,6 +176,7 @@ public class Aerolinea implements IAerolinea {
 			VueloInternacional vueloI = (VueloInternacional) vuelos.get(codVuelo);
 			codigoPasaje = vueloI.comprarPasaje(nroAsiento, aOcupar);
 		}
+
 		/*
 		 * En el caso que el codigo sea 0 o menor significa que algun dato fue erroneo
 		 */
@@ -221,7 +222,8 @@ public class Aerolinea implements IAerolinea {
 	}
 
 	public boolean fechaPosterior(String fecha) {
-		// este codigo puede ir en otra parte del programa, momentarneamente esta aca
+		// Este código puede ir en otra parte del programa, momentaneamente esta acá
+
 		// Extraer el día, mes y año usando substring
 		int dia = Integer.parseInt(fecha.substring(0, 2)); // Separa los dias
 		int mes = Integer.parseInt(fecha.substring(3, 5)); // Separa el mes
@@ -236,7 +238,5 @@ public class Aerolinea implements IAerolinea {
 		// Comparar año, luego mes, luego día
 		return (anio < anioActual) || (anio == anioActual && mes < mesActual)
 				|| (anio == anioActual && mes == mesActual && dia < diaActual);
-
 	}
-
 }

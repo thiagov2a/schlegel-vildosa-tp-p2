@@ -13,7 +13,6 @@ public class VueloNacional extends Vuelo {
 		this.precio = precio;
 		this.valorRefrigerios = valorRefrigerio;
 		this.cantAsientos = cantAsientos;
-		// TODO Apéndice de constructor generado automáticamente
 		this.pasajes = cargarAsientos();
 	}
 

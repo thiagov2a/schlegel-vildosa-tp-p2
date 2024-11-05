@@ -17,5 +17,4 @@ public abstract class Vuelo {
 	public String fecha() {
 		return fecha;
 	}
-
 }
