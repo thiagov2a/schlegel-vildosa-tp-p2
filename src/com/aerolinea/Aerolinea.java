@@ -2,6 +2,7 @@ package com.aerolinea;
 
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +21,7 @@ public class Aerolinea implements IAerolinea {
 		this.vuelos = new HashMap<>();
 		this.clientes = new HashMap<>();
 		this.aeropuertos = new HashMap<>();
+		this.cantVuelos=1;
 	}
 
 	
@@ -111,7 +113,40 @@ public class Aerolinea implements IAerolinea {
 	@Override
 	public Map<Integer, String> asientosDisponibles(String codVuelo) {
 		
-		return null;
+		Map<Integer, String> asientosDisponibles = new HashMap<>();
+		
+		int num=0;
+		
+		if (vuelos.get(codVuelo) instanceof VueloNacional) { 
+			VueloNacional vueloN = (VueloNacional) vuelos.get(codVuelo);
+			int[] asientos=new int [2];
+			asientos=vueloN.asientos();
+			for (int i = 0; i < asientos.length; i++) {
+				for (int j = 0; j < asientos[i]; j++) {
+				
+					if (vueloN.pasajes()[i+j].verificarAsiento()) {
+						asientosDisponibles.put(vueloN.pasajes()[num].numAsiento(),vueloN.tipoAsiento(num));	
+					}
+					num++;
+				}
+			}
+		}
+		
+		if (vuelos.get(codVuelo) instanceof VueloInternacional) { 
+			VueloInternacional vueloI = (VueloInternacional) vuelos.get(codVuelo);
+			int[] asientos=new int [3];
+			asientos=vueloI.asientos();
+			for (int i = 0; i < asientos.length; i++) {
+				for (int j = 0; j < asientos[i]; j++) {
+				
+					if (vueloI.pasajes()[num].verificarAsiento()) {
+						asientosDisponibles.put(vueloI.pasajes()[num].numAsiento(),vueloI.tipoAsiento(num));	
+					}
+					num++;
+				}
+			}
+		}
+		return asientosDisponibles;
 	}
 
 	@Override

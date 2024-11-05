@@ -28,4 +28,8 @@ public class Pasaje {
 	public int dniPasajero() {
 		return pasajero.dniCliente();
 		}
+	
+	public int numAsiento() {
+		return asiento.numAsiento();
+	}
 }

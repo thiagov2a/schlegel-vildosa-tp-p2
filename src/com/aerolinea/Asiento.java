@@ -13,11 +13,16 @@ public class Asiento {
 	}
 	
 	public boolean ocupado() {
-		return libre;
+		return comprado;
 	}
 	
 	public void vendido(boolean ocupado) {
 		this.comprado=true;
 		this.libre=ocupado;
 	}
+	
+	public int numAsiento() {
+		return numero;
+	}
+	
 }

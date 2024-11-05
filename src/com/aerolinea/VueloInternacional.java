@@ -43,4 +43,24 @@ public class VueloInternacional extends Vuelo {
 		return pasajes[numAsiento].dniPasajero()/2+numAsiento;
 	}
 	
+	public Pasaje[] pasajes() {
+		return pasajes;
+	}
+	
+	public int[] asientos() {
+		return cantAsientos; 
+	}
+
+	public String tipoAsiento(int num) {
+		String asiento="";
+		if (num < cantAsientos[0]) {
+			asiento="clase Turista";
+		}else if (num < cantAsientos[1]) {
+			asiento="clase Ejecutiva";
+		}else {
+			asiento="Primera clase";
+		}
+		return asiento;
+	}
+
 }
