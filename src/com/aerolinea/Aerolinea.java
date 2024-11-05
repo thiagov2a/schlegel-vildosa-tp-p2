@@ -1,8 +1,8 @@
 package com.aerolinea;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -189,8 +189,16 @@ public class Aerolinea implements IAerolinea {
 
 	@Override
 	public List<String> consultarVuelosSimilares(String origen, String destino, String Fecha) {
+		
+		List<String> vuelosSimilares = new ArrayList<>();
 
-		return null;
+		for (Map.Entry<String, Vuelo> entry : vuelos.entrySet()) {
+			if (entry.getValue().vueloSimilar(origen, destino, Fecha)) {
+				vuelosSimilares.add(entry.getKey());
+			}
+		}
+		
+		return vuelosSimilares;
 	}
 
 	@Override

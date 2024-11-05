@@ -17,4 +17,23 @@ public abstract class Vuelo {
 	public String fecha() {
 		return fecha;
 	}
+
+	public Boolean vueloSimilar(String orig, String dest, String fech) {
+		if (orig.equals(origen) && dest.equals(destino)) {
+			int diav = Integer.parseInt(fecha.substring(0, 2)); // Separa los dias
+			int mesv = Integer.parseInt(fecha.substring(3, 5)); // Separa el mes
+			int aniov = Integer.parseInt(fecha.substring(6, 10)); // Separa el año
+			int fechav = aniov * 365 + mesv * 30 + diav;
+
+			int dia = Integer.parseInt(fech.substring(0, 2)); // Separa los dias
+			int mes = Integer.parseInt(fech.substring(3, 5)); // Separa el mes
+			int anio = Integer.parseInt(fech.substring(6, 10)); // Separa el año
+			int fecha = anio * 365 + mes * 30 + dia;
+
+			if (fechav - fecha >= 0 && fechav - fecha <= 7) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
