@@ -1,12 +1,11 @@
 package com.aerolinea;
 
 public abstract class Vuelo {
-	
+
 	private String origen;
 	private String destino;
 	private String fecha;
 	private int tripulantes;
-
 
 	public Vuelo(String origen, String destino, String fecha, int tripulantes) {
 		this.origen = origen;
@@ -14,6 +13,9 @@ public abstract class Vuelo {
 		this.fecha = fecha;
 		this.tripulantes = tripulantes;
 	}
-	
+
+	public String fecha() {
+		return fecha;
+	}
 
 }
