@@ -2,7 +2,7 @@ package com.aerolinea;
 
 public class Pasaje {
 
-	private Pasajero pasajero;
+	private Cliente cliente;
 	private Vuelo vuelo;
 	private Asiento asiento;
 
@@ -11,8 +11,8 @@ public class Pasaje {
 		this.asiento = asiento;
 	}
 
-	public Pasaje(Pasajero pasajero, Vuelo vuelo, Asiento asiento) {
-		this.pasajero = pasajero;
+	public Pasaje(Pasajero cliente, Vuelo vuelo, Asiento asiento) {
+		this.cliente = cliente;
 		this.vuelo = vuelo;
 		this.asiento = asiento;
 	}
@@ -26,10 +26,26 @@ public class Pasaje {
 	}
 
 	public int dniPasajero() {
-		return pasajero.dniCliente();
+		return cliente.dniCliente();
 	}
-
+	
+	public String telefonoPasajero() {
+		return cliente.telefonoCliente();
+	}
+	
+	public String nombrePasajero() {
+		return cliente.nombreCliente();
+	}
+	
 	public int numAsiento() {
 		return asiento.numAsiento();
+	}
+	
+	public void asignarCliente(Cliente cliente) {
+		this.cliente=cliente;
+	}
+	
+	public boolean libre() {
+		return asiento.libre();
 	}
 }

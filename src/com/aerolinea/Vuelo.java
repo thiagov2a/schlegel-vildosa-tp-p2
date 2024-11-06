@@ -18,6 +18,14 @@ public abstract class Vuelo {
 		return fecha;
 	}
 
+	public String origen() {
+		return origen;
+	}
+	
+	public String destino() {
+		return destino;
+	}
+	
 	public Boolean vueloSimilar(String orig, String dest, String fech) {
 		if (orig.equals(origen) && dest.equals(destino)) {
 			int diav = Integer.parseInt(fecha.substring(0, 2)); // Separa los dias

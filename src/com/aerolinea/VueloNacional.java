@@ -6,6 +6,7 @@ public class VueloNacional extends Vuelo {
 	private double[] precio;
 	private int[] cantAsientos;
 	private Pasaje[] pasajes;
+	private String key;
 
 	public VueloNacional(String origen, String destino, String fecha, int tripulantes, int[] cantAsientos,
 			double[] precio, double valorRefrigerio) {
@@ -58,6 +59,19 @@ public class VueloNacional extends Vuelo {
 			asiento = "clase Ejecutiva";
 		}
 		return asiento;
+	}
+
+	public void cargarCliente(int numAsiento,Cliente cliente) {
+		pasajes[numAsiento].asignarCliente(cliente);
+	}
+
+	public String key() {
+		// TODO Apéndice de método generado automáticamente
+		return key;
+	}
+
+	public void cargarKey(String key) {
+		this.key=key;
 	}
 
 }

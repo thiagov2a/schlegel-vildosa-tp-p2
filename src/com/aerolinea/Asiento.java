@@ -25,4 +25,8 @@ public class Asiento {
 		return numero;
 	}
 
+	public boolean libre() {
+		return libre;
+	}
+	
 }

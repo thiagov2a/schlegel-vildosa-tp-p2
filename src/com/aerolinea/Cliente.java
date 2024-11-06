@@ -15,4 +15,12 @@ public class Cliente {
 	public int dniCliente() {
 		return dni;
 	}
+	
+	public String telefonoCliente() {
+		return telefono;
+	}
+	
+	public String nombreCliente() {
+		return nombre;
+	}
 }

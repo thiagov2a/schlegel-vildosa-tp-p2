@@ -62,7 +62,9 @@ public class Aerolinea implements IAerolinea {
 				valorRefrigerio);
 
 		cantVuelos++;
-
+		
+		vueloN.cargarKey(cantVuelos + "-PUB");
+		
 		vuelos.put(cantVuelos + "-PUB", vueloN);
 		return cantVuelos + "-PUB";
 	}
@@ -84,6 +86,8 @@ public class Aerolinea implements IAerolinea {
 
 		cantVuelos++;
 
+		vueloI.cargarKey(cantVuelos + "-PUB");
+		
 		vuelos.put(cantVuelos + "-PUB", vueloI);
 
 		return cantVuelos + "-PUB";
@@ -162,7 +166,7 @@ public class Aerolinea implements IAerolinea {
 		/*
 		 * 
 		 * 
-		 * FALTA EL METODO DE LOS VUELOS PRIVADOS
+		 * TODO;FALTA EL METODO DE LOS VUELOS PRIVADOS
 		 * 
 		 * 
 		 */
@@ -170,11 +174,13 @@ public class Aerolinea implements IAerolinea {
 		/* Va comparando cada tipo de vuelo para realizar el metodo necesario */
 		if (vuelos.get(codVuelo) instanceof VueloNacional) {
 			VueloNacional vueloN = (VueloNacional) vuelos.get(codVuelo);
-			codigoPasaje = vueloN.comprarPasaje(nroAsiento, aOcupar);
+			vueloN.cargarCliente(nroAsiento - 1, clientes.get(dni));
+			codigoPasaje = vueloN.comprarPasaje(nroAsiento - 1, aOcupar);
 		}
 		if (vuelos.get(codVuelo) instanceof VueloInternacional) {
 			VueloInternacional vueloI = (VueloInternacional) vuelos.get(codVuelo);
-			codigoPasaje = vueloI.comprarPasaje(nroAsiento, aOcupar);
+			vueloI.cargarCliente(nroAsiento - 1, clientes.get(dni));
+			codigoPasaje = vueloI.comprarPasaje(nroAsiento - 1, aOcupar);
 		}
 
 		/*
@@ -189,7 +195,7 @@ public class Aerolinea implements IAerolinea {
 
 	@Override
 	public List<String> consultarVuelosSimilares(String origen, String destino, String Fecha) {
-		
+
 		List<String> vuelosSimilares = new ArrayList<>();
 
 		for (Map.Entry<String, Vuelo> entry : vuelos.entrySet()) {
@@ -197,24 +203,109 @@ public class Aerolinea implements IAerolinea {
 				vuelosSimilares.add(entry.getKey());
 			}
 		}
-		
+
 		return vuelosSimilares;
 	}
 
 	@Override
 	public void cancelarPasaje(int dni, String codVuelo, int nroAsiento) {
-
+		if (vuelos.get(codVuelo) instanceof VueloNacional) {
+			VueloNacional vueloN = (VueloNacional) vuelos.get(codVuelo);
+			vueloN.pasajes()[nroAsiento - 1].asignarCliente(null);
+		} else {
+			VueloInternacional vueloI = (VueloInternacional) vuelos.get(codVuelo);
+			vueloI.pasajes()[nroAsiento - 1].asignarCliente(null);
+		}
 	}
 
 	@Override
 	public void cancelarPasaje(int dni, int codPasaje) {
+
+		for (Map.Entry<String, Vuelo> entry : vuelos.entrySet()) {
+			if (entry instanceof VueloNacional) {
+				VueloNacional vueloN = (VueloNacional) entry;
+				Pasaje[] pa = vueloN.pasajes();
+				for (Pasaje pasaje : pa) {
+					if (pasaje.dniPasajero() == dni) {
+						pasaje.asignarCliente(null);
+					}
+				}
+			}
+
+			if (entry instanceof VueloInternacional) {
+				VueloInternacional vueloI = (VueloInternacional) entry;
+				Pasaje[] pa = vueloI.pasajes();
+				for (Pasaje pasaje : pa) {
+					if (pasaje.dniPasajero() == dni) {
+						pasaje.asignarCliente(null);
+					}
+				}
+			}
+
+		}
 
 	}
 
 	@Override
 	public List<String> cancelarVuelo(String codVuelo) {
 
-		return null;
+		List<String> pasajesSinProgramar = new ArrayList<>();
+
+		List<String> vuelosRemplazos = consultarVuelosSimilares(vuelos.get(codVuelo).origen(),
+				vuelos.get(codVuelo).destino(), vuelos.get(codVuelo).fecha());
+		
+		Pasaje[] pasajes = null;
+		if (vuelos.get(codVuelo) instanceof VueloNacional) {
+		    VueloNacional vueloN = (VueloNacional) vuelos.get(codVuelo);
+		    pasajes = vueloN.pasajes();  
+		} else if (vuelos.get(codVuelo) instanceof VueloInternacional) {
+		    VueloInternacional vueloI = (VueloInternacional) vuelos.get(codVuelo);
+		    pasajes = vueloI.pasajes();  
+		}
+
+		if (pasajes != null) {
+		    for (Pasaje pasaje : pasajes) {
+		    	if (pasaje.verificarAsiento()) {
+		    		int numAsiento=pasaje.numAsiento();
+		    		for (String cod : vuelosRemplazos) {
+			    		if (vuelos.get(cod) instanceof VueloNacional) {
+			    		    VueloNacional vueloN = (VueloNacional) vuelos.get(cod);
+			    		    Pasaje[] pa = vueloN.pasajes();
+			    		    for (int i = pasaje.numAsiento()-1; i < pa.length; i++) {
+								if (!pa[i].verificarAsiento()) {
+									pa[i].comprarAsiento(pasaje.libre());
+									pasajesSinProgramar.add(pasaje.dniPasajero()+" - "+pasaje.nombrePasajero()
+									+" - "+pasaje.telefonoPasajero()+" - "+vueloN.key());
+								}
+							}
+			    		    
+			    		} else if (vuelos.get(cod) instanceof VueloInternacional) {
+			    		    VueloInternacional vueloI = (VueloInternacional) vuelos.get(cod);
+			    		    Pasaje[] pa = vueloI.pasajes();
+			    		    for (int i = pasaje.numAsiento()-1; i < pa.length; i++) {
+								if (!pa[i].verificarAsiento()) {
+									pa[i].comprarAsiento(pasaje.libre());
+									pasajesSinProgramar.add(pasaje.dniPasajero()+" - "+pasaje.nombrePasajero()
+									+" - "+pasaje.telefonoPasajero()+" - "+vueloI.key());
+								}
+							}
+			    		    
+			    		}else {
+			    			
+			    			pasajesSinProgramar.add(pasaje.dniPasajero()+" - "+pasaje.nombrePasajero()
+							+" - "+pasaje.telefonoPasajero()+" - CANCELADO");
+			    			
+			    		}
+					}
+				}
+		    	
+		    	
+		    }
+		}
+		
+		vuelos.remove(codVuelo);
+		
+		return pasajesSinProgramar;
 	}
 
 	@Override
@@ -247,4 +338,40 @@ public class Aerolinea implements IAerolinea {
 		return (anio < anioActual) || (anio == anioActual && mes < mesActual)
 				|| (anio == anioActual && mes == mesActual && dia < diaActual);
 	}
+	
+	/*
+	 * 		for (Map.Entry<String, Vuelo> entry : vuelos.entrySet()) {
+			if (entry instanceof VueloNacional) {
+				VueloNacional vueloN = (VueloNacional) entry;
+				Pasaje[] pa = vueloN.pasajes();
+				for (Pasaje pasaje : pa) {
+					if (pasaje.verificarAsiento()) {
+						int n = 0;
+						int asiento = pasaje.numAsiento();
+						boolean bucle = true;
+						while (n < vuelosRemplazos.size()) {
+							VueloNacional vueloN2 = (VueloNacional) vuelos.get(vuelosRemplazos.get(n));
+							for (int i = asiento-1; i < vueloN2.asientos().length; i++) {
+								if (!vueloN2.pasajes()[i].verificarAsiento()) {
+									vueloN2.pasajes()[i].comprarAsiento(bucle);
+								}
+							}
+						}
+					}
+
+				}
+			}
+			if (entry instanceof VueloInternacional) {
+				VueloInternacional vueloI = (VueloInternacional) entry;
+				Pasaje[] pa = vueloI.pasajes();
+				for (Pasaje pasaje : pa) {
+
+				}
+			}
+		}
+	 * 
+	 * 
+	 * */
+	
+	
 }

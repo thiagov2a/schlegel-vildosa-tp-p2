@@ -8,6 +8,7 @@ public class VueloInternacional extends Vuelo {
 	private String[] escalas;
 	private int[] cantAsientos;
 	private Pasaje[] pasajes;
+	private String key;
 
 	public VueloInternacional(String origen, String destino, String fecha, int tripulantes, int[] cantAsientos,
 			double valorRefrigerios, double[] precio, int cantRefrigerios, String[] escalas) {
@@ -65,4 +66,18 @@ public class VueloInternacional extends Vuelo {
 		return asiento;
 	}
 
+	public void cargarCliente(int numAsiento,Cliente cliente) {
+		pasajes[numAsiento].asignarCliente(cliente);
+	}
+	
+	public String key() {
+		// TODO Apéndice de método generado automáticamente
+		return key;
+	}
+
+	public void cargarKey(String key) {
+		this.key=key;
+	}
+	
+	
 }
