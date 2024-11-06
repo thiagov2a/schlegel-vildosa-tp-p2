@@ -24,8 +24,11 @@ public class Aerolinea implements IAerolinea {
 		this.aeropuertos = new HashMap<>();
 		this.recaudacionPorDestino = new HashMap<>();
 		this.cantVuelos = 1;
+
 	}
 
+
+	
 	@Override
 	public void registrarCliente(int dni, String nombre, String telefono) {
 		if (clientes.containsKey(dni)) {
@@ -62,15 +65,13 @@ public class Aerolinea implements IAerolinea {
 			throw new RuntimeException("El destino ingresado pertenece a Argentina.");
 		}
 
+		String codigo = generarCodigo("PUB");
+		
 		VueloNacional vueloN = new VueloNacional(origen, destino, fecha, tripulantes, cantAsientos, precios,
-				valorRefrigerio);
+				valorRefrigerio, codigo);
 
-		cantVuelos++;
-
-		vueloN.cargarKey(cantVuelos + "-PUB");
-
-		vuelos.put(cantVuelos + "-PUB", vueloN);
-		return cantVuelos + "-PUB";
+		vuelos.put(codigo, vueloN);
+		return codigo;
 	}
 
 	@Override
@@ -85,18 +86,14 @@ public class Aerolinea implements IAerolinea {
 			throw new RuntimeException("El destino ingresado no esta registrado.");
 		}
 
+		String codigo = generarCodigo("PUB");
+		
 		VueloInternacional vueloI = new VueloInternacional(origen, destino, fecha, tripulantes, cantAsientos,
-				valorRefrigerio, precios, cantRefrigerios, escalas);
+				valorRefrigerio, precios, cantRefrigerios, escalas, codigo);
 
-		cantVuelos++;
+		vuelos.put(codigo, vueloI);
 
-		vueloI.cargarKey(cantVuelos + "-PUB");
-
-		// recaudacionPorDestino.put(destino,(double) 0);
-
-		vuelos.put(cantVuelos + "-PUB", vueloI);
-
-		return cantVuelos + "-PUB";
+		return codigo;
 	}
 
 	@Override
@@ -110,20 +107,20 @@ public class Aerolinea implements IAerolinea {
 		if (!aeropuertos.containsKey(destino)) {
 			throw new RuntimeException("El destino ingresado no esta registrado.");
 		}
-
+		
+		String codigo = generarCodigo("PRI");
+		
 		VueloPrivado vueloP = new VueloPrivado(origen, destino, fecha, tripulantes, precio, dniComprador,
-				acompaniantes);
+				acompaniantes, codigo);
 
 		double recaudacionAnterior = recaudacionPorDestino.get(destino);
 
 		double recaudacionNueva = recaudacionAnterior + vueloP.PrecioViaje();
 		recaudacionPorDestino.put(destino, recaudacionNueva);
 		
-		cantVuelos++;
+		vuelos.put(codigo, vueloP);
 
-		vuelos.put(cantVuelos + "-PRI", vueloP);
-
-		return cantVuelos + "-PRI";
+		return codigo;
 	}
 
 	@Override
@@ -273,6 +270,8 @@ public class Aerolinea implements IAerolinea {
 			pasajes = vueloI.pasajes();
 		}
 
+		
+		
 		if (pasajes != null) {
 			for (Pasaje pasaje : pasajes) {
 				if (pasaje.verificarAsiento()) {
@@ -285,7 +284,7 @@ public class Aerolinea implements IAerolinea {
 								if (!pa[i].verificarAsiento()) {
 									pa[i].comprarAsiento(pasaje.libre());
 									pasajesSinProgramar.add(pasaje.dniPasajero() + " - " + pasaje.nombrePasajero()
-											+ " - " + pasaje.telefonoPasajero() + " - " + vueloN.key());
+											+ " - " + pasaje.telefonoPasajero() + " - " );
 								}
 							}
 
@@ -296,7 +295,7 @@ public class Aerolinea implements IAerolinea {
 								if (!pa[i].verificarAsiento()) {
 									pa[i].comprarAsiento(pasaje.libre());
 									pasajesSinProgramar.add(pasaje.dniPasajero() + " - " + pasaje.nombrePasajero()
-											+ " - " + pasaje.telefonoPasajero() + " - " + vueloI.key());
+											+ " - " + pasaje.telefonoPasajero() + " - " );
 								}
 							}
 
@@ -327,11 +326,26 @@ public class Aerolinea implements IAerolinea {
 
 	@Override
 	public String detalleDeVuelo(String codVuelo) {
-
-		return "2 - PUB - Aeroparque - Bariloche - 15/12/2024 - NACIONAL";
+		
+		String datos="";
+		
+		if (vuelos.get(codVuelo) instanceof VueloNacional) {
+			VueloNacional vueloN = (VueloNacional) vuelos.get(codVuelo);
+			datos=vueloN.toString();
+		} else if (vuelos.get(codVuelo) instanceof VueloInternacional) {
+			VueloInternacional vueloI = (VueloInternacional) vuelos.get(codVuelo);
+			datos=vueloI.toString();
+		}else {
+			VueloPrivado vueloP = (VueloPrivado) vuelos.get(codVuelo);
+			datos=vueloP.toString();
+		}
+		
+		System.out.println(datos);
+		
+		return datos;
 	}
 
-	public boolean fechaPosterior(String fecha) {
+	private boolean fechaPosterior(String fecha) {
 		// Este código puede ir en otra parte del programa, momentaneamente esta acá
 
 		// Extraer el día, mes y año usando substring
@@ -350,24 +364,10 @@ public class Aerolinea implements IAerolinea {
 				|| (anio == anioActual && mes == mesActual && dia < diaActual);
 	}
 
-	/*
-	 * for (Map.Entry<String, Vuelo> entry : vuelos.entrySet()) { if (entry
-	 * instanceof VueloNacional) { VueloNacional vueloN = (VueloNacional) entry;
-	 * Pasaje[] pa = vueloN.pasajes(); for (Pasaje pasaje : pa) { if
-	 * (pasaje.verificarAsiento()) { int n = 0; int asiento = pasaje.numAsiento();
-	 * boolean bucle = true; while (n < vuelosRemplazos.size()) { VueloNacional
-	 * vueloN2 = (VueloNacional) vuelos.get(vuelosRemplazos.get(n)); for (int i =
-	 * asiento-1; i < vueloN2.asientos().length; i++) { if
-	 * (!vueloN2.pasajes()[i].verificarAsiento()) {
-	 * vueloN2.pasajes()[i].comprarAsiento(bucle); } } } }
-	 * 
-	 * } } if (entry instanceof VueloInternacional) { VueloInternacional vueloI =
-	 * (VueloInternacional) entry; Pasaje[] pa = vueloI.pasajes(); for (Pasaje
-	 * pasaje : pa) {
-	 * 
-	 * } } }
-	 * 
-	 * 
-	 */
+	private String generarCodigo(String tipo) {
+		this.cantVuelos++;
+		
+		return cantVuelos + "-" +tipo;
+	}
 
 }

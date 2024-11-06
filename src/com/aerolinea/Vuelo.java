@@ -2,16 +2,18 @@ package com.aerolinea;
 
 public abstract class Vuelo {
 
-	private String origen;
-	private String destino;
-	private String fecha;
-	private int tripulantes;
+	protected String origen;
+	protected String destino;
+	protected String fecha;
+	protected int tripulantes;
+	protected String codigo;
 
-	public Vuelo(String origen, String destino, String fecha, int tripulantes) {
+	public Vuelo(String origen, String destino, String fecha, int tripulantes, String codigo) {
 		this.origen = origen;
 		this.destino = destino;
 		this.fecha = fecha;
 		this.tripulantes = tripulantes;
+		this.codigo=codigo;
 	}
 
 	public String fecha() {
@@ -25,6 +27,18 @@ public abstract class Vuelo {
 	public String destino() {
 		return destino;
 	}
+	
+	
+	public String toString(String tipo) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(codigo).append(" - ")
+          .append(origen).append(" - ")
+          .append(destino).append(" - ")
+          .append(fecha).append(" - ")
+          .append(tipo);
+        return sb.toString();
+	}
+
 	
 	public Boolean vueloSimilar(String orig, String dest, String fech) {
 		if (orig.equals(origen) && dest.equals(destino)) {

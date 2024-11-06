@@ -9,8 +9,8 @@ public class VueloNacional extends Vuelo {
 	private String key;
 
 	public VueloNacional(String origen, String destino, String fecha, int tripulantes, int[] cantAsientos,
-			double[] precio, double valorRefrigerio) {
-		super(origen, destino, fecha, tripulantes);
+			double[] precio, double valorRefrigerio, String codigo) {
+		super(origen, destino, fecha, tripulantes, codigo);
 		this.precio = precio;
 		this.valorRefrigerios = valorRefrigerio;
 		this.cantAsientos = cantAsientos;
@@ -64,14 +64,10 @@ public class VueloNacional extends Vuelo {
 	public void cargarCliente(int numAsiento,Cliente cliente) {
 		pasajes[numAsiento].asignarCliente(cliente);
 	}
-
-	public String key() {
-		// TODO Apéndice de método generado automáticamente
-		return key;
-	}
-
-	public void cargarKey(String key) {
-		this.key=key;
-	}
-
+	
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		return super.toString("NACIONAL");
+		}
+	
 }

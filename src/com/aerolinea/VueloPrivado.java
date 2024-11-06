@@ -8,18 +8,39 @@ public class VueloPrivado extends Vuelo {
 	private int jets;
 
 	public VueloPrivado(String origen, String destino, String fecha, int tripulantes, double precio, int dniComprador,
-			int[] acompaniantes) {
-		super(origen, destino, fecha, tripulantes);
+			int[] acompaniantes, String codigo) {
+		super(origen, destino, fecha, tripulantes, codigo);
 		this.acompaniantes = acompaniantes;
 		this.dniComprador = dniComprador;
 		this.precio = precio;
+		this.jets = Math.ceilDiv(acompaniantes.length+1, 15); //Se le suma el comprador
 	}
 
 	public double PrecioViaje() {
-		this.jets = Math.ceilDiv(acompaniantes.length, 15) ;
-		System.out.println(jets + " asdas");
+		
 		double precioJets = jets * precio;
 		return precioJets * 1.30;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(codigo)
+		.append(" - ")
+		.append(origen)
+		.append(" - ")
+		.append(destino)
+		.append(" - ")
+		.append(fecha)
+		.append(" - ")
+		.append("PRIVADO")
+		.append(" (")
+		.append(jets)
+		.append(")");
+		return sb.toString();
+	}
+
 }
+
+// CodigoVuelo - Nombre Aeropuerto de salida - Nombre Aeropuerto de llegada - 
+//                     fecha de salida - [NACIONAL /INTERNACIONAL / PRIVADO + cantidad de jets necesarios].
