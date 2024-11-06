@@ -114,6 +114,11 @@ public class Aerolinea implements IAerolinea {
 		VueloPrivado vueloP = new VueloPrivado(origen, destino, fecha, tripulantes, precio, dniComprador,
 				acompaniantes);
 
+		double recaudacionAnterior = recaudacionPorDestino.get(destino);
+
+		double recaudacionNueva = recaudacionAnterior + vueloP.PrecioViaje();
+		recaudacionPorDestino.put(destino, recaudacionNueva);
+		
 		cantVuelos++;
 
 		vuelos.put(cantVuelos + "-PRI", vueloP);
@@ -168,12 +173,7 @@ public class Aerolinea implements IAerolinea {
 		}
 
 		int codigoPasaje = 0;
-
-		if (vuelos.get(codVuelo) instanceof VueloPrivado) {
-			VueloPrivado vueloP =(VueloPrivado) vuelos.get(codVuelo);
-			
-		}
-
+		
 		/* Va comparando cada tipo de vuelo para realizar el metodo necesario */
 		if (vuelos.get(codVuelo) instanceof VueloNacional) {
 			VueloNacional vueloN = (VueloNacional) vuelos.get(codVuelo);
@@ -319,6 +319,7 @@ public class Aerolinea implements IAerolinea {
 	public double totalRecaudado(String destino) {
 		double recadudado = 0;
 		if (!vuelos.containsKey(destino)) {
+
 			recadudado = recaudacionPorDestino.get(destino);
 		}
 		return recadudado;
