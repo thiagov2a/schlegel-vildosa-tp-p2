@@ -13,4 +13,8 @@ public class VueloPrivado extends Vuelo {
 		this.dniComprador = dniComprador;
 		this.precio = precio;
 	}
+	
+	
+	
+	
 }
