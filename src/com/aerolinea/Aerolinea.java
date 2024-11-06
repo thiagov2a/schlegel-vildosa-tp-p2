@@ -340,8 +340,6 @@ public class Aerolinea implements IAerolinea {
 			datos=vueloP.toString();
 		}
 		
-		System.out.println(datos);
-		
 		return datos;
 	}
 

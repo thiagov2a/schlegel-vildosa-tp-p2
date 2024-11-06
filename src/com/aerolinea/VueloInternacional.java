@@ -1,8 +1,5 @@
 package com.aerolinea;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class VueloInternacional extends Vuelo {
 
 	private double valorRefrigerios;
