@@ -34,7 +34,7 @@ public abstract class Vuelo {
 		}
 		return false;
 	}
-	
+
 	public String fecha() {
 		return fecha;
 	}
@@ -46,13 +46,10 @@ public abstract class Vuelo {
 	public String destino() {
 		return destino;
 	}
-	
+
 	public String detalles(String tipo) {
 		StringBuilder sb = new StringBuilder();
-		return sb.append(codigo).append(" - ")
-				.append(origen).append(" - ")
-				.append(destino).append(" - ")
-				.append(fecha).append(" - ")
-				.append(tipo).toString();
+		return sb.append(codigo).append(" - ").append(origen).append(" - ").append(destino).append(" - ").append(fecha)
+				.append(" - ").append(tipo).toString();
 	}
 }

@@ -7,7 +7,7 @@ public class Pasaje {
 	private Asiento asiento;
 
 	public Pasaje(int i) {
-		Asiento asiento = new Asiento(i, false, false);
+		Asiento asiento = new Asiento(i);
 		this.asiento = asiento;
 	}
 
@@ -17,35 +17,36 @@ public class Pasaje {
 		this.asiento = asiento;
 	}
 
-	public void comprarAsiento(boolean ocupar) {
-		asiento.vendido(ocupar);
+	public void comprar(boolean ocupar) {
+		this.asiento.vendido(ocupar);
 	}
 
 	public boolean verificarAsiento() {
-		return asiento.ocupado();
+		return this.asiento.isOcupado();
 	}
 
 	public int dniPasajero() {
 		return cliente.dniCliente();
 	}
-	
+
 	public String telefonoPasajero() {
 		return cliente.telefonoCliente();
 	}
-	
+
 	public String nombrePasajero() {
 		return cliente.nombreCliente();
 	}
-	
+
 	public int numAsiento() {
-		return asiento.numAsiento();
+		return asiento.getNumero();
 	}
-	
+
 	public void asignarCliente(Cliente cliente) {
-		this.cliente=cliente;
+		this.cliente = cliente;
 	}
 	
-	public boolean libre() {
-		return asiento.libre();
+	public Asiento getAsiento() {
+		return this.asiento;
 	}
+
 }

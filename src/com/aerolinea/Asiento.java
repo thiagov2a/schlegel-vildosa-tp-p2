@@ -3,30 +3,30 @@ package com.aerolinea;
 public class Asiento {
 
 	private int numero;
-	private Boolean libre;
+	private boolean ocupado;
 	private boolean comprado;
 
-	public Asiento(int numero, Boolean estado, boolean comprado) {
+	public Asiento(int numero) {
 		this.numero = numero;
-		this.libre = estado;
-		this.comprado = comprado;
-	}
-
-	public boolean ocupado() {
-		return comprado;
+		this.ocupado = false;
+		this.comprado = false;
 	}
 
 	public void vendido(boolean ocupado) {
 		this.comprado = true;
-		this.libre = ocupado;
+		this.ocupado = ocupado;
 	}
 
-	public int numAsiento() {
+	public int getNumero() {
 		return numero;
 	}
 
-	public boolean libre() {
-		return libre;
+	public boolean isOcupado() {
+		return ocupado;
 	}
-	
+
+	public boolean isComprado() {
+		return comprado;
+	}
+
 }

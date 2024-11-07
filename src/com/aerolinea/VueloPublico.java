@@ -1,5 +1,7 @@
 package com.aerolinea;
 
+import java.util.Iterator;
+
 public abstract class VueloPublico extends Vuelo {
 
 	protected double valorRefrigerios;
@@ -58,7 +60,7 @@ public abstract class VueloPublico extends Vuelo {
 
 	public int comprarPasaje(int numAsiento, boolean ocupar) {
 		if (numAsiento >= 0 && numAsiento < pasajes.length) {
-			pasajes[numAsiento].comprarAsiento(ocupar);
+			pasajes[numAsiento].comprar(ocupar);
 			return pasajes[numAsiento].dniPasajero() / 2 + numAsiento;
 		}
 		return -1; // Devuelve un valor negativo si el número de asiento no es válido
@@ -81,10 +83,10 @@ public abstract class VueloPublico extends Vuelo {
 	}
 
 	public int[] getCantAsientos() {
-		return cantAsientos;
+		return this.cantAsientos;
 	}
 
 	public Pasaje[] getPasajes() {
-		return pasajes;
+		return this.pasajes;
 	}
 }

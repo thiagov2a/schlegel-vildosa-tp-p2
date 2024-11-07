@@ -81,7 +81,6 @@ public class Aerolinea implements IAerolinea {
 			double valorRefrigerio, int cantRefrigerios, double[] precios, int[] cantAsientos, String[] escalas) {
 		validarVuelo(destino, "", fecha);
 
-		// Hola lele
 		String codigo = generarCodigo("PUB");
 		VueloInternacional vueloInternacional = new VueloInternacional(codigo, origen, destino, fecha, tripulantes,
 				cantAsientos, valorRefrigerio, precios, cantRefrigerios, escalas);
@@ -108,38 +107,26 @@ public class Aerolinea implements IAerolinea {
 
 	@Override
 	public Map<Integer, String> asientosDisponibles(String codVuelo) {
-
 		Map<Integer, String> asientosDisponibles = new HashMap<>();
 
-		int num = 0;
+		
+		VueloPublico vuelo = (VueloPublico) vuelos.get(codVuelo); // Cast a vuelo público, ya que ambos tipos lo son.
 
-		if (vuelos.get(codVuelo) instanceof VueloNacional) {
-			VueloNacional vueloN = (VueloNacional) vuelos.get(codVuelo);
-			int[] asientos = new int[2];
-			asientos = vueloN.getCantAsientos();
-			for (int i = 0; i < asientos.length; i++) {
-				for (int j = 0; j < asientos[i]; j++) {
+		// Lógica para obtener la cantidad de asientos y pasajes dependiendo del tipo de
+		// vuelo
+		int[] cantAsientos = vuelo.getCantAsientos();
+		Pasaje[] pasajes = vuelo.getPasajes();
 
-					if (vueloN.getPasajes()[i + j].verificarAsiento()) {
-						asientosDisponibles.put(vueloN.getPasajes()[num].numAsiento(), vueloN.tipoAsiento(num));
-					}
-					num++;
+		int numAsiento = 0; // Número de asiento que se va a asignar
+
+		// Iterar sobre las secciones de asientos
+		for (int i = 0; i < cantAsientos.length; i++) {
+			for (int j = 0; j < cantAsientos[i]; j++) {
+				if (!pasajes[numAsiento].getAsiento().isComprado()) { // Verificar si el asiento está disponible
+					// Asignar el asiento disponible con su tipo de clase
+					asientosDisponibles.put(pasajes[numAsiento].numAsiento(), vuelo.tipoAsiento(numAsiento));
 				}
-			}
-		}
-
-		if (vuelos.get(codVuelo) instanceof VueloInternacional) {
-			VueloInternacional vueloI = (VueloInternacional) vuelos.get(codVuelo);
-			int[] asientos = new int[3];
-			asientos = vueloI.getCantAsientos();
-			for (int i = 0; i < asientos.length; i++) {
-				for (int j = 0; j < asientos[i]; j++) {
-
-					if (vueloI.getPasajes()[num].verificarAsiento()) {
-						asientosDisponibles.put(vueloI.getPasajes()[num].numAsiento(), vueloI.tipoAsiento(num));
-					}
-					num++;
-				}
+				numAsiento++; // Incrementar el número del asiento
 			}
 		}
 		return asientosDisponibles;
@@ -297,7 +284,7 @@ public class Aerolinea implements IAerolinea {
 		Pasaje[] pasajes = vueloN.getPasajes();
 		for (int i = pasaje.numAsiento() - 1; i < pasajes.length; i++) {
 			if (!pasajes[i].verificarAsiento()) {
-				pasajes[i].comprarAsiento(pasaje.libre());
+				pasajes[i].comprar(pasaje.getAsiento().isOcupado());
 				return true;
 			}
 		}
@@ -310,7 +297,7 @@ public class Aerolinea implements IAerolinea {
 		Pasaje[] pasajes = vueloI.getPasajes();
 		for (int i = pasaje.numAsiento() - 1; i < pasajes.length; i++) {
 			if (!pasajes[i].verificarAsiento()) {
-				pasajes[i].comprarAsiento(pasaje.libre());
+				pasajes[i].comprar(pasaje.getAsiento().isOcupado());
 				return true;
 			}
 		}
