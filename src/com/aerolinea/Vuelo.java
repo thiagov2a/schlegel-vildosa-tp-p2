@@ -2,44 +2,20 @@ package com.aerolinea;
 
 public abstract class Vuelo {
 
+	protected String codigo;
 	protected String origen;
 	protected String destino;
 	protected String fecha;
 	protected int tripulantes;
-	protected String codigo;
 
-	public Vuelo(String origen, String destino, String fecha, int tripulantes, String codigo) {
+	public Vuelo(String codigo, String origen, String destino, String fecha, int tripulantes) {
+		this.codigo = codigo;
 		this.origen = origen;
 		this.destino = destino;
 		this.fecha = fecha;
 		this.tripulantes = tripulantes;
-		this.codigo=codigo;
 	}
 
-	public String fecha() {
-		return fecha;
-	}
-
-	public String origen() {
-		return origen;
-	}
-	
-	public String destino() {
-		return destino;
-	}
-	
-	
-	public String toString(String tipo) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(codigo).append(" - ")
-          .append(origen).append(" - ")
-          .append(destino).append(" - ")
-          .append(fecha).append(" - ")
-          .append(tipo);
-        return sb.toString();
-	}
-
-	
 	public Boolean vueloSimilar(String orig, String dest, String fech) {
 		if (orig.equals(origen) && dest.equals(destino)) {
 			int diav = Integer.parseInt(fecha.substring(0, 2)); // Separa los dias
@@ -57,5 +33,26 @@ public abstract class Vuelo {
 			}
 		}
 		return false;
+	}
+	
+	public String fecha() {
+		return fecha;
+	}
+
+	public String origen() {
+		return origen;
+	}
+
+	public String destino() {
+		return destino;
+	}
+	
+	public String detalles(String tipo) {
+		StringBuilder sb = new StringBuilder();
+		return sb.append(codigo).append(" - ")
+				.append(origen).append(" - ")
+				.append(destino).append(" - ")
+				.append(fecha).append(" - ")
+				.append(tipo).toString();
 	}
 }

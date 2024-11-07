@@ -23,16 +23,13 @@ public class Aerolinea implements IAerolinea {
 		this.clientes = new HashMap<>();
 		this.aeropuertos = new HashMap<>();
 		this.recaudacionPorDestino = new HashMap<>();
-		this.cantVuelos = 1;
-
+		this.cantVuelos = 0;
 	}
 
-
-	
 	@Override
 	public void registrarCliente(int dni, String nombre, String telefono) {
 		if (clientes.containsKey(dni)) {
-			throw new RuntimeException("El cliente ya se encuentra registrado.");
+			throw new RuntimeException("El cliente con DNI " + dni + " ya está registrado.");
 		}
 
 		Cliente cliente = new Cliente(dni, nombre, telefono);
@@ -42,83 +39,68 @@ public class Aerolinea implements IAerolinea {
 	@Override
 	public void registrarAeropuerto(String nombre, String pais, String provincia, String direccion) {
 		if (aeropuertos.containsKey(nombre)) {
-			throw new RuntimeException("El aeropuerto ya se encuentra registrado.");
+			throw new RuntimeException("El aeropuerto " + nombre + " ya está registrado.");
 		}
-
-		recaudacionPorDestino.put(nombre, (double) 0);
 
 		Aeropuerto aeropuerto = new Aeropuerto(nombre, pais, provincia, direccion);
 		aeropuertos.put(nombre, aeropuerto);
+		recaudacionPorDestino.put(nombre, 0.0); // Inicializa la recaudación en 0
+	}
+
+	private void validarVuelo(String destino, String paisEsperado, String fecha) {
+		if (!aeropuertos.containsKey(destino)) {
+			throw new RuntimeException("El destino " + destino + " no está registrado.");
+		}
+
+		// Si paisEsperado está vacío ignoramos esta validación
+		if (paisEsperado != null && !paisEsperado.isEmpty()) {
+			if (!aeropuertos.get(destino).compararPais(paisEsperado)) {
+				throw new RuntimeException("El destino " + destino + " no pertenece a " + paisEsperado + ".");
+			}
+		}
+
+		if (fechaPosterior(fecha)) {
+			throw new RuntimeException("La fecha ingresada no es válida.");
+		}
 	}
 
 	@Override
 	public String registrarVueloPublicoNacional(String origen, String destino, String fecha, int tripulantes,
 			double valorRefrigerio, double[] precios, int[] cantAsientos) {
-
-		if (fechaPosterior(fecha)) {
-			throw new RuntimeException("Fecha ingresada no es valida.");
-		}
-
-		if (!aeropuertos.containsKey(destino)) {
-			throw new RuntimeException("El destino ingresado no esta registrado.");
-		} else if (!aeropuertos.get(destino).compararPais("Argentina")) {
-			throw new RuntimeException("El destino ingresado pertenece a Argentina.");
-		}
+		validarVuelo(destino, "Argentina", fecha);
 
 		String codigo = generarCodigo("PUB");
-		
-		VueloNacional vueloN = new VueloNacional(origen, destino, fecha, tripulantes, cantAsientos, precios,
-				valorRefrigerio, codigo);
-
-		vuelos.put(codigo, vueloN);
+		VueloNacional vueloNacional = new VueloNacional(codigo, origen, destino, fecha, tripulantes, cantAsientos,
+				precios, valorRefrigerio);
+		vuelos.put(codigo, vueloNacional);
 		return codigo;
 	}
 
 	@Override
 	public String registrarVueloPublicoInternacional(String origen, String destino, String fecha, int tripulantes,
 			double valorRefrigerio, int cantRefrigerios, double[] precios, int[] cantAsientos, String[] escalas) {
-
-		if (fechaPosterior(fecha)) {
-			throw new RuntimeException("Fecha ingresada no es valida.");
-		}
-
-		if (!aeropuertos.containsKey(destino)) {
-			throw new RuntimeException("El destino ingresado no esta registrado.");
-		}
+		validarVuelo(destino, "", fecha);
 
 		String codigo = generarCodigo("PUB");
-		
-		VueloInternacional vueloI = new VueloInternacional(origen, destino, fecha, tripulantes, cantAsientos,
-				valorRefrigerio, precios, cantRefrigerios, escalas, codigo);
-
-		vuelos.put(codigo, vueloI);
-
+		VueloInternacional vueloInternacional = new VueloInternacional(codigo, origen, destino, fecha, tripulantes,
+				cantAsientos, valorRefrigerio, precios, cantRefrigerios, escalas);
+		vuelos.put(codigo, vueloInternacional);
 		return codigo;
 	}
 
 	@Override
 	public String VenderVueloPrivado(String origen, String destino, String fecha, int tripulantes, double precio,
 			int dniComprador, int[] acompaniantes) {
+		validarVuelo(destino, "", fecha);
 
-		if (fechaPosterior(fecha)) {
-			throw new RuntimeException("Fecha ingresada no es valida.");
-		}
-
-		if (!aeropuertos.containsKey(destino)) {
-			throw new RuntimeException("El destino ingresado no esta registrado.");
-		}
-		
 		String codigo = generarCodigo("PRI");
-		
-		VueloPrivado vueloP = new VueloPrivado(origen, destino, fecha, tripulantes, precio, dniComprador,
-				acompaniantes, codigo);
+		VueloPrivado vueloP = new VueloPrivado(codigo, origen, destino, fecha, tripulantes, precio, dniComprador,
+				acompaniantes);
+		vuelos.put(codigo, vueloP);
 
 		double recaudacionAnterior = recaudacionPorDestino.get(destino);
-
-		double recaudacionNueva = recaudacionAnterior + vueloP.PrecioViaje();
+		double recaudacionNueva = recaudacionAnterior + vueloP.precioViaje();
 		recaudacionPorDestino.put(destino, recaudacionNueva);
-		
-		vuelos.put(codigo, vueloP);
 
 		return codigo;
 	}
@@ -133,12 +115,12 @@ public class Aerolinea implements IAerolinea {
 		if (vuelos.get(codVuelo) instanceof VueloNacional) {
 			VueloNacional vueloN = (VueloNacional) vuelos.get(codVuelo);
 			int[] asientos = new int[2];
-			asientos = vueloN.asientos();
+			asientos = vueloN.getCantAsientos();
 			for (int i = 0; i < asientos.length; i++) {
 				for (int j = 0; j < asientos[i]; j++) {
 
-					if (vueloN.pasajes()[i + j].verificarAsiento()) {
-						asientosDisponibles.put(vueloN.pasajes()[num].numAsiento(), vueloN.tipoAsiento(num));
+					if (vueloN.getPasajes()[i + j].verificarAsiento()) {
+						asientosDisponibles.put(vueloN.getPasajes()[num].numAsiento(), vueloN.tipoAsiento(num));
 					}
 					num++;
 				}
@@ -148,12 +130,12 @@ public class Aerolinea implements IAerolinea {
 		if (vuelos.get(codVuelo) instanceof VueloInternacional) {
 			VueloInternacional vueloI = (VueloInternacional) vuelos.get(codVuelo);
 			int[] asientos = new int[3];
-			asientos = vueloI.asientos();
+			asientos = vueloI.getCantAsientos();
 			for (int i = 0; i < asientos.length; i++) {
 				for (int j = 0; j < asientos[i]; j++) {
 
-					if (vueloI.pasajes()[num].verificarAsiento()) {
-						asientosDisponibles.put(vueloI.pasajes()[num].numAsiento(), vueloI.tipoAsiento(num));
+					if (vueloI.getPasajes()[num].verificarAsiento()) {
+						asientosDisponibles.put(vueloI.getPasajes()[num].numAsiento(), vueloI.tipoAsiento(num));
 					}
 					num++;
 				}
@@ -170,7 +152,7 @@ public class Aerolinea implements IAerolinea {
 		}
 
 		int codigoPasaje = 0;
-		
+
 		/* Va comparando cada tipo de vuelo para realizar el metodo necesario */
 		if (vuelos.get(codVuelo) instanceof VueloNacional) {
 			VueloNacional vueloN = (VueloNacional) vuelos.get(codVuelo);
@@ -186,7 +168,7 @@ public class Aerolinea implements IAerolinea {
 
 			double recaudacionNueva = recaudacionAnterior + vueloI.recaudado(nroAsiento);
 			recaudacionPorDestino.put(destino, recaudacionNueva);
-			
+
 			codigoPasaje = vueloI.comprarPasaje(nroAsiento - 1, aOcupar);
 		}
 
@@ -218,10 +200,10 @@ public class Aerolinea implements IAerolinea {
 	public void cancelarPasaje(int dni, String codVuelo, int nroAsiento) {
 		if (vuelos.get(codVuelo) instanceof VueloNacional) {
 			VueloNacional vueloN = (VueloNacional) vuelos.get(codVuelo);
-			vueloN.pasajes()[nroAsiento - 1].asignarCliente(null);
+			vueloN.getPasajes()[nroAsiento - 1].asignarCliente(null);
 		} else {
 			VueloInternacional vueloI = (VueloInternacional) vuelos.get(codVuelo);
-			vueloI.pasajes()[nroAsiento - 1].asignarCliente(null);
+			vueloI.getPasajes()[nroAsiento - 1].asignarCliente(null);
 		}
 	}
 
@@ -231,7 +213,7 @@ public class Aerolinea implements IAerolinea {
 		for (Map.Entry<String, Vuelo> entry : vuelos.entrySet()) {
 			if (entry instanceof VueloNacional) {
 				VueloNacional vueloN = (VueloNacional) entry;
-				Pasaje[] pa = vueloN.pasajes();
+				Pasaje[] pa = vueloN.getPasajes();
 				for (Pasaje pasaje : pa) {
 					if (pasaje.dniPasajero() == dni) {
 						pasaje.asignarCliente(null);
@@ -241,7 +223,7 @@ public class Aerolinea implements IAerolinea {
 
 			if (entry instanceof VueloInternacional) {
 				VueloInternacional vueloI = (VueloInternacional) entry;
-				Pasaje[] pa = vueloI.pasajes();
+				Pasaje[] pa = vueloI.getPasajes();
 				for (Pasaje pasaje : pa) {
 					if (pasaje.dniPasajero() == dni) {
 						pasaje.asignarCliente(null);
@@ -255,63 +237,89 @@ public class Aerolinea implements IAerolinea {
 
 	@Override
 	public List<String> cancelarVuelo(String codVuelo) {
-
 		List<String> pasajesSinProgramar = new ArrayList<>();
 
+		// Consultamos vuelos similares para el reenvío de los pasajes
 		List<String> vuelosRemplazos = consultarVuelosSimilares(vuelos.get(codVuelo).origen(),
 				vuelos.get(codVuelo).destino(), vuelos.get(codVuelo).fecha());
 
-		Pasaje[] pasajes = null;
-		if (vuelos.get(codVuelo) instanceof VueloNacional) {
-			VueloNacional vueloN = (VueloNacional) vuelos.get(codVuelo);
-			pasajes = vueloN.pasajes();
-		} else if (vuelos.get(codVuelo) instanceof VueloInternacional) {
-			VueloInternacional vueloI = (VueloInternacional) vuelos.get(codVuelo);
-			pasajes = vueloI.pasajes();
-		}
+		// Obtenemos los pasajes según el tipo de vuelo
+		Pasaje[] pasajes = obtenerPasajesVuelo(codVuelo);
 
-		
-		
 		if (pasajes != null) {
 			for (Pasaje pasaje : pasajes) {
 				if (pasaje.verificarAsiento()) {
-					int numAsiento = pasaje.numAsiento();
+					// Intentamos reprogramar el pasaje en vuelos similares
+					boolean reprogramado = false;
 					for (String cod : vuelosRemplazos) {
-						if (vuelos.get(cod) instanceof VueloNacional) {
-							VueloNacional vueloN = (VueloNacional) vuelos.get(cod);
-							Pasaje[] pa = vueloN.pasajes();
-							for (int i = pasaje.numAsiento() - 1; i < pa.length; i++) {
-								if (!pa[i].verificarAsiento()) {
-									pa[i].comprarAsiento(pasaje.libre());
-									pasajesSinProgramar.add(pasaje.dniPasajero() + " - " + pasaje.nombrePasajero()
-											+ " - " + pasaje.telefonoPasajero() + " - " );
-								}
-							}
-
-						} else if (vuelos.get(cod) instanceof VueloInternacional) {
-							VueloInternacional vueloI = (VueloInternacional) vuelos.get(cod);
-							Pasaje[] pa = vueloI.pasajes();
-							for (int i = pasaje.numAsiento() - 1; i < pa.length; i++) {
-								if (!pa[i].verificarAsiento()) {
-									pa[i].comprarAsiento(pasaje.libre());
-									pasajesSinProgramar.add(pasaje.dniPasajero() + " - " + pasaje.nombrePasajero()
-											+ " - " + pasaje.telefonoPasajero() + " - " );
-								}
-							}
-
-						} else {
-
-							pasajesSinProgramar.add(pasaje.dniPasajero() + " - " + pasaje.nombrePasajero() + " - "
-									+ pasaje.telefonoPasajero() + " - CANCELADO");
-
+						if (reprogramarPasajeEnVuelo(cod, pasaje)) {
+							pasajesSinProgramar.add(formatearPasaje(pasaje, cod));
+							reprogramado = true;
+							break;
 						}
 					}
-				}
 
+					// Si no se pudo reprogramar el pasaje, lo cancelamos
+					if (!reprogramado) {
+						pasajesSinProgramar.add(formatearPasaje(pasaje, "CANCELADO"));
+					}
+				}
 			}
 		}
 
 		return pasajesSinProgramar;
+	}
+
+	// Método auxiliar para obtener los pasajes de un vuelo según su código
+	private Pasaje[] obtenerPasajesVuelo(String codVuelo) {
+		if (vuelos.get(codVuelo) instanceof VueloNacional) {
+			return ((VueloNacional) vuelos.get(codVuelo)).getPasajes();
+		} else if (vuelos.get(codVuelo) instanceof VueloInternacional) {
+			return ((VueloInternacional) vuelos.get(codVuelo)).getPasajes();
+		}
+		return null;
+	}
+
+	// Método para intentar reprogramar un pasaje en un vuelo
+	private boolean reprogramarPasajeEnVuelo(String codVuelo, Pasaje pasaje) {
+		if (vuelos.get(codVuelo) instanceof VueloNacional) {
+			return reprogramarPasajeEnVueloNacional(codVuelo, pasaje);
+		} else if (vuelos.get(codVuelo) instanceof VueloInternacional) {
+			return reprogramarPasajeEnVueloInternacional(codVuelo, pasaje);
+		}
+		return false;
+	}
+
+	// Método para reprogramar en un vuelo nacional
+	private boolean reprogramarPasajeEnVueloNacional(String codVuelo, Pasaje pasaje) {
+		VueloNacional vueloN = (VueloNacional) vuelos.get(codVuelo);
+		Pasaje[] pasajes = vueloN.getPasajes();
+		for (int i = pasaje.numAsiento() - 1; i < pasajes.length; i++) {
+			if (!pasajes[i].verificarAsiento()) {
+				pasajes[i].comprarAsiento(pasaje.libre());
+				return true;
+			}
+		}
+		return false;
+	}
+
+	// Método para reprogramar en un vuelo internacional
+	private boolean reprogramarPasajeEnVueloInternacional(String codVuelo, Pasaje pasaje) {
+		VueloInternacional vueloI = (VueloInternacional) vuelos.get(codVuelo);
+		Pasaje[] pasajes = vueloI.getPasajes();
+		for (int i = pasaje.numAsiento() - 1; i < pasajes.length; i++) {
+			if (!pasajes[i].verificarAsiento()) {
+				pasajes[i].comprarAsiento(pasaje.libre());
+				return true;
+			}
+		}
+		return false;
+	}
+
+	// Método para formatear la salida del pasaje
+	private String formatearPasaje(Pasaje pasaje, String codigoVuelo) {
+		return pasaje.dniPasajero() + " - " + pasaje.nombrePasajero() + " - " + pasaje.telefonoPasajero() + " - "
+				+ codigoVuelo;
 	}
 
 	@Override
@@ -326,20 +334,17 @@ public class Aerolinea implements IAerolinea {
 
 	@Override
 	public String detalleDeVuelo(String codVuelo) {
-		
-		String datos="";
-		
-		if (vuelos.get(codVuelo) instanceof VueloNacional) {
-			VueloNacional vueloN = (VueloNacional) vuelos.get(codVuelo);
-			datos=vueloN.toString();
-		} else if (vuelos.get(codVuelo) instanceof VueloInternacional) {
-			VueloInternacional vueloI = (VueloInternacional) vuelos.get(codVuelo);
-			datos=vueloI.toString();
-		}else {
-			VueloPrivado vueloP = (VueloPrivado) vuelos.get(codVuelo);
-			datos=vueloP.toString();
+		String datos = "";
+		Vuelo vuelo = vuelos.get(codVuelo);
+
+		if (vuelo instanceof VueloNacional) {
+			datos = ((VueloNacional) vuelo).detalles();
+		} else if (vuelo instanceof VueloInternacional) {
+			datos = ((VueloInternacional) vuelo).detalles();
+		} else if (vuelo instanceof VueloPrivado) {
+			datos = ((VueloPrivado) vuelo).detalles();
 		}
-		
+
 		return datos;
 	}
 
@@ -364,8 +369,7 @@ public class Aerolinea implements IAerolinea {
 
 	private String generarCodigo(String tipo) {
 		this.cantVuelos++;
-		
-		return cantVuelos + "-" +tipo;
+		return cantVuelos + "-" + tipo;
 	}
 
 }

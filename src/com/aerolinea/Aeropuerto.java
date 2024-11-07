@@ -15,7 +15,10 @@ public class Aeropuerto {
 	}
 
 	public boolean compararPais(String paisAComparar) {
-		return pais.equals(paisAComparar);
+		if (paisAComparar == null) {
+			return false;
+		}
+		return pais.equalsIgnoreCase(paisAComparar);
 	}
 
 }
