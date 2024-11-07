@@ -81,6 +81,7 @@ public class Aerolinea implements IAerolinea {
 			double valorRefrigerio, int cantRefrigerios, double[] precios, int[] cantAsientos, String[] escalas) {
 		validarVuelo(destino, "", fecha);
 
+		// Hola lele
 		String codigo = generarCodigo("PUB");
 		VueloInternacional vueloInternacional = new VueloInternacional(codigo, origen, destino, fecha, tripulantes,
 				cantAsientos, valorRefrigerio, precios, cantRefrigerios, escalas);
