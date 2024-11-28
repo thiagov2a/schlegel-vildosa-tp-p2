@@ -18,7 +18,7 @@
 ---
 
 ### 🧑‍🤝‍🧑 Integrantes del Grupo
-- **Schlegel, Agustín Ezequiel:** []
+- **Schlegel, Agustín Ezequiel:** agustinschlegel3@gmail.com
 - **Vildosa, Thiago Joel:** tvildosa@gmail.com
 
 ---
