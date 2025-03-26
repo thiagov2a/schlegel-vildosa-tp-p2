@@ -7,13 +7,13 @@
 </h1>
 
 <p align="center">  
-  Este documento contiene el desarrollo y la documentación del Trabajo Práctico Integrador de Programación II, 2º Cuatrimestre 2024.
+  Este documento contiene el desarrollo y la documentación del Trabajo Práctico Integrador de Programación II, 2º Semestre 2024.
 </p>
 
 ---
 
 ### 📅 Fecha de Entrega
-**Fecha límite:** 06/11/2024 (Campus Virtual)
+**Fecha límite:** 06/11/2024
 
 ---
 
@@ -46,5 +46,5 @@ La implementación abarca todas las funcionalidades solicitadas en el enunciado,
 ---
 
 <p align="center">  
-  Universidad Nacional de General Sarmiento - UNGS | Programación II - 2º Cuatrimestre 2024
+  Universidad Nacional de General Sarmiento - UNGS | Programación II - 2º Semestre 2024
 </p>
